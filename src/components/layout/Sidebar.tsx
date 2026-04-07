@@ -96,11 +96,11 @@ export const Sidebar = () => {
       </div>
       
       {/* Theme Switcher */}
-      <div className="absolute -left-12 bottom-10 flex flex-col space-y-2">
-        <button onClick={() => setTheme('purple')} className={clsx("w-6 h-6 rounded-full bg-purple-500 shadow-md", theme === 'purple' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
-        <button onClick={() => setTheme('green')} className={clsx("w-6 h-6 rounded-full bg-green-500 shadow-md", theme === 'green' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
-        <button onClick={() => setTheme('blue')} className={clsx("w-6 h-6 rounded-full bg-blue-500 shadow-md", theme === 'blue' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
-        <button onClick={() => setTheme('orange')} className={clsx("w-6 h-6 rounded-full bg-orange-500 shadow-md", theme === 'orange' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
+      <div className="absolute -left-12 bottom-10 flex flex-col space-y-4 z-50">
+        <button onClick={() => setTheme('purple')} className={clsx("w-6 h-6 rounded-full bg-purple-500 shadow-md hover:scale-110 transition-transform cursor-pointer", theme === 'purple' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
+        <button onClick={() => setTheme('green')} className={clsx("w-6 h-6 rounded-full bg-green-500 shadow-md hover:scale-110 transition-transform cursor-pointer", theme === 'green' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
+        <button onClick={() => setTheme('blue')} className={clsx("w-6 h-6 rounded-full bg-blue-500 shadow-md hover:scale-110 transition-transform cursor-pointer", theme === 'blue' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
+        <button onClick={() => setTheme('orange')} className={clsx("w-6 h-6 rounded-full bg-orange-500 shadow-md hover:scale-110 transition-transform cursor-pointer", theme === 'orange' && "ring-2 ring-white ring-offset-2 ring-offset-sidebar-bg")}></button>
       </div>
 
     </div>

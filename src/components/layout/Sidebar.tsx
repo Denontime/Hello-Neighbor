@@ -1,18 +1,36 @@
-import { Search, User, MessageSquare, Phone, MoreHorizontal, PenSquare } from 'lucide-react';
+import { Search, User, MessageSquare, Phone, MoreHorizontal, PenSquare, Shield } from 'lucide-react';
 import { useThemeStore } from '../../store/themeStore';
 import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { apiClient } from '../../api/client';
 
 export const Sidebar = () => {
   const { theme, setTheme } = useThemeStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [boards, setBoards] = useState<any[]>([]);
   
+  useEffect(() => {
+    fetchBoards();
+  }, []);
+
+  const fetchBoards = async () => {
+    try {
+      const res = await apiClient.get('/boards');
+      setBoards(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const users = [
     { id: 1, name: '张三家', status: '在线', time: '刚刚', unread: 2, avatar: 'https://i.pravatar.cc/150?u=1' },
     { id: 2, name: '李四的妻子', status: '离线', time: '12:35 AM', unread: 1, avatar: 'https://i.pravatar.cc/150?u=2' },
-    { id: 3, name: '王五家大宝', status: '离线', time: '11:48 PM', unread: 0, avatar: 'https://i.pravatar.cc/150?u=3' },
   ];
 
   return (
-    <div className="w-80 h-full bg-sidebar-bg text-sidebar-text flex flex-col relative shadow-xl rounded-l-2xl z-10">
+    <div className="w-80 h-full bg-sidebar-bg text-sidebar-text flex flex-col relative shadow-xl rounded-l-2xl z-10 shrink-0">
       
       {/* Floating Action Button */}
       <button className="absolute -left-5 top-8 w-12 h-12 bg-primary-600 rounded-full shadow-lg shadow-primary-500/50 flex items-center justify-center hover:scale-105 transition-transform z-20">
@@ -28,7 +46,14 @@ export const Sidebar = () => {
               <span className="text-xs text-primary-400">在线</span>
             </div>
           </div>
-          <button className="text-gray-400 hover:text-white">
+          <button 
+            className="text-gray-400 hover:text-white transition-colors"
+            onClick={() => {
+              localStorage.removeItem('token');
+              navigate('/login');
+            }}
+            title="退出登录"
+          >
             <MoreHorizontal size={20} />
           </button>
         </div>
@@ -46,17 +71,41 @@ export const Sidebar = () => {
       <div className="flex-1 overflow-y-auto px-4">
         <h3 className="text-xs font-semibold text-gray-500 mb-3 px-2">系统板块</h3>
         <div className="space-y-1 mb-6">
-           <div className="p-3 rounded-xl cursor-pointer transition-colors bg-sidebar-hover border-l-4 border-primary-500">
-             <div className="flex justify-between items-center">
-               <h4 className="font-medium text-sm text-white">约饭</h4>
-               <span className="text-xs text-gray-400">活跃</span>
+           {boards.map(b => (
+             <div 
+               key={b.id} 
+               onClick={() => navigate(`/app/boards/${b.code}`)}
+               className={clsx(
+                 "p-3 rounded-xl cursor-pointer transition-colors border-l-4",
+                 location.pathname === `/app/boards/${b.code}` 
+                  ? "bg-sidebar-hover border-primary-500" 
+                  : "hover:bg-sidebar-hover border-transparent"
+               )}
+             >
+               <div className="flex justify-between items-center">
+                 <h4 className={clsx("font-medium text-sm", location.pathname === `/app/boards/${b.code}` ? "text-white" : "text-gray-300")}>{b.name_cn}</h4>
+                 {location.pathname === `/app/boards/${b.code}` && <span className="text-xs text-primary-400">活跃</span>}
+               </div>
              </div>
-           </div>
-           <div className="p-3 rounded-xl cursor-pointer hover:bg-sidebar-hover transition-colors border-l-4 border-transparent">
-             <div className="flex justify-between items-center">
-               <h4 className="font-medium text-sm text-gray-300">帮带娃</h4>
-             </div>
-           </div>
+           ))}
+        </div>
+
+        <h3 className="text-xs font-semibold text-gray-500 mb-3 px-2">自治治理</h3>
+        <div className="space-y-1 mb-6">
+          <div 
+            onClick={() => navigate(`/app/governance`)}
+            className={clsx(
+              "p-3 rounded-xl cursor-pointer transition-colors border-l-4",
+              location.pathname === `/app/governance` 
+               ? "bg-sidebar-hover border-primary-500" 
+               : "hover:bg-sidebar-hover border-transparent"
+            )}
+          >
+            <div className="flex items-center space-x-3">
+              <Shield size={18} className={location.pathname === `/app/governance` ? "text-primary-400" : "text-gray-400"} />
+              <h4 className={clsx("font-medium text-sm", location.pathname === `/app/governance` ? "text-white" : "text-gray-300")}>提案与投票</h4>
+            </div>
+          </div>
         </div>
 
         <h3 className="text-xs font-semibold text-gray-500 mb-3 px-2">邻居列表</h3>

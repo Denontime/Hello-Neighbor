@@ -29,7 +29,7 @@ export default defineConfig({
   ],
   server: {
     watch: {
-      ignored: ['**/backend/**']
+      ignored: ['**/backend/**', '**/.pnpm-store/**']
     }
   }
 })
